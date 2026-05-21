@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In — MindBase</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #faf8f5;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            -webkit-font-smoothing: antialiased;
+            padding: 24px;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 420px;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .login-card {
+            background: #ffffff;
+            border: 1px solid #e7e5e0;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 
+                0 0 0 1px rgba(234, 88, 12, 0.04),
+                0 4px 24px rgba(0, 0, 0, 0.06);
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .logo {
+            color: #ea580c;
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .logo::before {
+            content: "◆";
+            font-size: 20px;
+            color: #ea580c;
+        }
+
+        .login-header h1 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1c1917;
+            margin-bottom: 6px;
+            letter-spacing: -0.01em;
+        }
+
+        .login-header p {
+            font-size: 14px;
+            color: #a8a29e;
+            font-weight: 400;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #57534e;
+            margin-bottom: 6px;
+            letter-spacing: 0.01em;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            background: #faf8f5;
+            border: 1.5px solid #e7e5e0;
+            border-radius: 10px;
+            color: #1c1917;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 400;
+            outline: none;
+            transition: all 0.15s ease;
+        }
+
+        .form-group input::placeholder {
+            color: #a8a29e;
+        }
+
+        .form-group input:hover {
+            border-color: #d6d3d1;
+            background: #ffffff;
+        }
+
+        .form-group input:focus {
+            border-color: #ea580c;
+            box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.1);
+            background: #ffffff;
+        }
+
+        .form-group input.error {
+            border-color: #ef4444;
+            background: #fef2f2;
+        }
+
+        .error-message {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 6px;
+            font-size: 12px;
+            color: #ef4444;
+            font-weight: 500;
+        }
+
+        .error-message::before {
+            content: "⚠";
+            font-size: 11px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px 20px;
+            background: #ea580c;
+            color: #ffffff;
+            border: 1px solid rgba(234, 88, 12, 0.3);
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 15px;
+            font-weight: 600;
+            transition: all 0.15s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .btn:hover {
+            background: #c2410c;
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+        }
+
+        .btn:disabled {
+            background: #d6d3d1;
+            border-color: #d6d3d1;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #ffffff;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 24px 0;
+            color: #a8a29e;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: #e7e5e0;
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #78716c;
+            font-weight: 500;
+        }
+
+        .register-link a {
+            color: #ea580c;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .register-link a:hover {
+            color: #c2410c;
+            text-decoration: underline;
+        }
+
+        @media (max-width: 480px) {
+            .login-card {
+                padding: 28px 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useCallback } = React;
+
+        const API_URL = 'http://localhost:3001/api';
+
+        function LoginPage() {
+            const [formData, setFormData] = useState({ email: '', password: '' });
+            const [errors, setErrors] = useState({});
+            const [isLoading, setIsLoading] = useState(false);
+
+            const updateField = useCallback((field, value) => {
+                setFormData(prev => ({ ...prev, [field]: value }));
+                if (errors[field]) {
+                    setErrors(prev => {
+                        const next = { ...prev };
+                        delete next[field];
+                        return next;
+                    });
+                }
+            }, [errors]);
+
+            const validate = useCallback(() => {
+                const newErrors = {};
+                if (!formData.email.trim()) newErrors.email = 'Email is required';
+                if (!formData.password) newErrors.password = 'Password is required';
+                setErrors(newErrors);
+                return Object.keys(newErrors).length === 0;
+            }, [formData]);
+
+            const handleSubmit = useCallback(async (e) => {
+                e.preventDefault();
+                if (!validate()) return;
+                
+                setIsLoading(true);
+                try {
+                    const res = await fetch(`${API_URL}/auth/login`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(formData)
+                    });
+                    
+                    const data = await res.json();
+                    
+                    if (!res.ok) {
+                        setErrors({ submit: data.error || 'Invalid credentials' });
+                        setIsLoading(false);
+                        return;
+                    }
+                    
+                    localStorage.setItem('mindbase_token', data.token);
+                    localStorage.setItem('mindbase_user', JSON.stringify(data.user));
+                    window.location.href = 'index.html';
+                    
+                } catch (err) {
+                    setErrors({ submit: 'Network error. Please try again.' });
+                    setIsLoading(false);
+                }
+            }, [formData, validate]);
+
+            return (
+                <div className="login-container">
+                    <div className="login-card">
+                        <div className="login-header">
+                            <div className="logo">MindBase</div>
+                            <h1>Welcome back</h1>
+                            <p>Sign in to continue mapping your mind</p>
+                        </div>
+                        
+                        <form onSubmit={handleSubmit} noValidate>
+                            <div className="form-group">
+                                <label htmlFor="email">Email</label>
+                                <input
+                                    id="email"
+                                    type="email"
+                                    value={formData.email}
+                                    onChange={(e) => updateField('email', e.target.value)}
+                                    placeholder="you@example.com"
+                                    className={errors.email ? 'error' : ''}
+                                    autoComplete="email"
+                                />
+                                {errors.email && <div className="error-message">{errors.email}</div>}
+                            </div>
+                            
+                            <div className="form-group">
+                                <label htmlFor="password">Password</label>
+                                <input
+                                    id="password"
+                                    type="password"
+                                    value={formData.password}
+                                    onChange={(e) => updateField('password', e.target.value)}
+                                    placeholder="••••••••"
+                                    className={errors.password ? 'error' : ''}
+                                    autoComplete="current-password"
+                                />
+                                {errors.password && <div className="error-message">{errors.password}</div>}
+                            </div>
+                            
+                            {errors.submit && (
+                                <div className="error-message" style={{marginBottom:16,justifyContent:'center'}}>
+                                    {errors.submit}
+                                </div>
+                            )}
+                            
+                            <button type="submit" className="btn" disabled={isLoading}>
+                                {isLoading ? (
+                                    <>
+                                        <span className="btn-spinner"></span>
+                                        Signing in...
+                                    </>
+                                ) : (
+                                    'Sign In'
+                                )}
+                            </button>
+                        </form>
+                        
+                        <div className="divider">or</div>
+                        
+                        <div className="register-link">
+                            New to MindBase? <a href="register.html">Create an account</a>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<LoginPage />);
+    </script>
+</body>
+</html>

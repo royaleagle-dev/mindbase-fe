@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join MindBase</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #faf8f5;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            -webkit-font-smoothing: antialiased;
+            padding: 24px;
+        }
+
+        .register-container {
+            width: 100%;
+            max-width: 420px;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .register-card {
+            background: #ffffff;
+            border: 1px solid #e7e5e0;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 
+                0 0 0 1px rgba(234, 88, 12, 0.04),
+                0 4px 24px rgba(0, 0, 0, 0.06);
+        }
+
+        .register-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .logo {
+            color: #ea580c;
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .logo::before {
+            content: "◆";
+            font-size: 20px;
+            color: #ea580c;
+        }
+
+        .register-header h1 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1c1917;
+            margin-bottom: 6px;
+            letter-spacing: -0.01em;
+        }
+
+        .register-header p {
+            font-size: 14px;
+            color: #a8a29e;
+            font-weight: 400;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #57534e;
+            margin-bottom: 6px;
+            letter-spacing: 0.01em;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            background: #faf8f5;
+            border: 1.5px solid #e7e5e0;
+            border-radius: 10px;
+            color: #1c1917;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 400;
+            outline: none;
+            transition: all 0.15s ease;
+        }
+
+        .form-group input::placeholder {
+            color: #a8a29e;
+        }
+
+        .form-group input:hover {
+            border-color: #d6d3d1;
+            background: #ffffff;
+        }
+
+        .form-group input:focus {
+            border-color: #ea580c;
+            box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.1);
+            background: #ffffff;
+        }
+
+        .form-group input.error {
+            border-color: #ef4444;
+            background: #fef2f2;
+        }
+
+        .form-group input.error:focus {
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+        }
+
+        .error-message {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 6px;
+            font-size: 12px;
+            color: #ef4444;
+            font-weight: 500;
+            animation: shakeIn 0.3s ease;
+        }
+
+        @keyframes shakeIn {
+            from { opacity: 0; transform: translateX(-4px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .error-message::before {
+            content: "⚠";
+            font-size: 11px;
+        }
+
+        .password-strength {
+            margin-top: 6px;
+            height: 3px;
+            background: #e7e5e0;
+            border-radius: 2px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .password-strength-bar {
+            height: 100%;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+            width: 0;
+        }
+
+        .password-strength-bar.weak { width: 33%; background: #ef4444; }
+        .password-strength-bar.fair { width: 66%; background: #f59e0b; }
+        .password-strength-bar.strong { width: 100%; background: #22c55e; }
+
+        .password-strength-label {
+            font-size: 11px;
+            margin-top: 4px;
+            font-weight: 500;
+        }
+
+        .password-strength-label.weak { color: #ef4444; }
+        .password-strength-label.fair { color: #f59e0b; }
+        .password-strength-label.strong { color: #22c55e; }
+
+        .btn {
+            width: 100%;
+            padding: 12px 20px;
+            background: #ea580c;
+            color: #ffffff;
+            border: 1px solid rgba(234, 88, 12, 0.3);
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 15px;
+            font-weight: 600;
+            transition: all 0.15s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .btn:hover {
+            background: #c2410c;
+            border-color: rgba(194, 65, 12, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+        }
+
+        .btn:disabled {
+            background: #d6d3d1;
+            border-color: #d6d3d1;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #ffffff;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 24px 0;
+            color: #a8a29e;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: #e7e5e0;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #78716c;
+            font-weight: 500;
+        }
+
+        .login-link a {
+            color: #ea580c;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.15s ease;
+        }
+
+        .login-link a:hover {
+            color: #c2410c;
+            text-decoration: underline;
+        }
+
+        .success-toast {
+            position: fixed;
+            top: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-100px);
+            background: #ffffff;
+            border: 1px solid #22c55e;
+            color: #15803d;
+            padding: 14px 24px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            opacity: 0;
+            transition: all 0.4s ease;
+            z-index: 1000;
+        }
+
+        .success-toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        .success-toast::before {
+            content: "✓";
+            width: 22px;
+            height: 22px;
+            background: #22c55e;
+            color: #ffffff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .field-hint {
+            font-size: 12px;
+            color: #a8a29e;
+            margin-top: 4px;
+            font-weight: 400;
+        }
+
+        @media (max-width: 480px) {
+            .register-card {
+                padding: 28px 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useCallback, useEffect } = React;
+
+        const API_URL = 'http://localhost:3001/api';
+
+        function RegisterPage() {
+            const [formData, setFormData] = useState({
+                username: '',
+                email: '',
+                displayName: '',
+                password: '',
+                confirmPassword: ''
+            });
+            const [errors, setErrors] = useState({});
+            const [isLoading, setIsLoading] = useState(false);
+            const [showSuccess, setShowSuccess] = useState(false);
+
+            const updateField = useCallback((field, value) => {
+                setFormData(prev => ({ ...prev, [field]: value }));
+                // Clear error when user starts typing
+                if (errors[field]) {
+                    setErrors(prev => {
+                        const next = { ...prev };
+                        delete next[field];
+                        return next;
+                    });
+                }
+            }, [errors]);
+
+            const getPasswordStrength = (password) => {
+                if (!password) return { score: 0, label: '' };
+                let score = 0;
+                if (password.length >= 8) score++;
+                if (/[A-Z]/.test(password)) score++;
+                if (/[0-9]/.test(password)) score++;
+                if (/[^A-Za-z0-9]/.test(password)) score++;
+                
+                const labels = ['', 'weak', 'fair', 'good', 'strong'];
+                const displayLabels = ['', 'Weak', 'Fair', 'Good', 'Strong'];
+                return { score, label: labels[score], displayLabel: displayLabels[score] };
+            };
+
+            const strength = getPasswordStrength(formData.password);
+
+            const validate = useCallback(() => {
+                const newErrors = {};
+                
+                if (!formData.username.trim()) {
+                    newErrors.username = 'Username is required';
+                } else if (formData.username.length < 3) {
+                    newErrors.username = 'Username must be at least 3 characters';
+                } else if (!/^[a-zA-Z0-9_]+$/.test(formData.username)) {
+                    newErrors.username = 'Only letters, numbers, and underscores allowed';
+                }
+                
+                if (!formData.email.trim()) {
+                    newErrors.email = 'Email is required';
+                } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+                    newErrors.email = 'Please enter a valid email';
+                }
+                
+                if (!formData.password) {
+                    newErrors.password = 'Password is required';
+                } else if (formData.password.length < 6) {
+                    newErrors.password = 'Password must be at least 6 characters';
+                }
+                
+                if (formData.password !== formData.confirmPassword) {
+                    newErrors.confirmPassword = 'Passwords do not match';
+                }
+                
+                setErrors(newErrors);
+                return Object.keys(newErrors).length === 0;
+            }, [formData]);
+
+            const handleSubmit = useCallback(async (e) => {
+                e.preventDefault();
+                if (!validate()) return;
+                
+                setIsLoading(true);
+                try {
+                    const res = await fetch(`${API_URL}/auth/register`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            username: formData.username.trim(),
+                            email: formData.email.trim(),
+                            password: formData.password,
+                            displayName: formData.displayName.trim() || formData.username.trim()
+                        })
+                    });
+                    
+                    const data = await res.json();
+                    
+                    if (!res.ok) {
+                        setErrors({ submit: data.error || 'Registration failed' });
+                        setIsLoading(false);
+                        return;
+                    }
+                    
+                    // Store token and redirect
+                    localStorage.setItem('mindbase_token', data.token);
+                    localStorage.setItem('mindbase_user', JSON.stringify(data.user));
+                    
+                    setShowSuccess(true);
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 1500);
+                    
+                } catch (err) {
+                    setErrors({ submit: 'Network error. Please try again.' });
+                    setIsLoading(false);
+                }
+            }, [formData, validate]);
+
+            return (
+                <>
+                    <div className={`success-toast ${showSuccess ? 'show' : ''}`}>
+                        Account created! Redirecting...
+                    </div>
+                    
+                    <div className="register-container">
+                        <div className="register-card">
+                            <div className="register-header">
+                                <div className="logo">MindBase</div>
+                                <h1>Create your account</h1>
+                                <p>Start mapping your mind today</p>
+                            </div>
+                            
+                            <form onSubmit={handleSubmit} noValidate>
+                                <div className="form-group">
+                                    <label htmlFor="username">Username</label>
+                                    <input
+                                        id="username"
+                                        type="text"
+                                        value={formData.username}
+                                        onChange={(e) => updateField('username', e.target.value)}
+                                        placeholder="johndoe"
+                                        className={errors.username ? 'error' : ''}
+                                        autoComplete="username"
+                                    />
+                                    {errors.username && <div className="error-message">{errors.username}</div>}
+                                    <div className="field-hint">3-30 characters, letters, numbers, underscores</div>
+                                </div>
+                                
+                                <div className="form-group">
+                                    <label htmlFor="email">Email</label>
+                                    <input
+                                        id="email"
+                                        type="email"
+                                        value={formData.email}
+                                        onChange={(e) => updateField('email', e.target.value)}
+                                        placeholder="you@example.com"
+                                        className={errors.email ? 'error' : ''}
+                                        autoComplete="email"
+                                    />
+                                    {errors.email && <div className="error-message">{errors.email}</div>}
+                                </div>
+                                
+                                <div className="form-group">
+                                    <label htmlFor="displayName">Display Name <span style={{color:'#a8a29e',fontWeight:400}}>(optional)</span></label>
+                                    <input
+                                        id="displayName"
+                                        type="text"
+                                        value={formData.displayName}
+                                        onChange={(e) => updateField('displayName', e.target.value)}
+                                        placeholder="John Doe"
+                                        autoComplete="name"
+                                    />
+                                </div>
+                                
+                                <div className="form-group">
+                                    <label htmlFor="password">Password</label>
+                                    <input
+                                        id="password"
+                                        type="password"
+                                        value={formData.password}
+                                        onChange={(e) => updateField('password', e.target.value)}
+                                        placeholder="••••••••"
+                                        className={errors.password ? 'error' : ''}
+                                        autoComplete="new-password"
+                                    />
+                                    {formData.password && (
+                                        <>
+                                            <div className="password-strength">
+                                                <div className={`password-strength-bar ${strength.label}`}></div>
+                                            </div>
+                                            {strength.displayLabel && (
+                                                <div className={`password-strength-label ${strength.label}`}>
+                                                    {strength.displayLabel}
+                                                </div>
+                                            )}
+                                        </>
+                                    )}
+                                    {errors.password && <div className="error-message">{errors.password}</div>}
+                                </div>
+                                
+                                <div className="form-group">
+                                    <label htmlFor="confirmPassword">Confirm Password</label>
+                                    <input
+                                        id="confirmPassword"
+                                        type="password"
+                                        value={formData.confirmPassword}
+                                        onChange={(e) => updateField('confirmPassword', e.target.value)}
+                                        placeholder="••••••••"
+                                        className={errors.confirmPassword ? 'error' : ''}
+                                        autoComplete="new-password"
+                                    />
+                                    {errors.confirmPassword && <div className="error-message">{errors.confirmPassword}</div>}
+                                </div>
+                                
+                                {errors.submit && (
+                                    <div className="error-message" style={{marginBottom:16,justifyContent:'center'}}>
+                                        {errors.submit}
+                                    </div>
+                                )}
+                                
+                                <button type="submit" className="btn" disabled={isLoading}>
+                                    {isLoading ? (
+                                        <>
+                                            <span className="btn-spinner"></span>
+                                            Creating account...
+                                        </>
+                                    ) : (
+                                        'Create Account'
+                                    )}
+                                </button>
+                            </form>
+                            
+                            <div className="divider">or</div>
+                            
+                            <div className="login-link">
+                                Already have an account? <a href="login.html">Sign in</a>
+                            </div>
+                        </div>
+                    </div>
+                </>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<RegisterPage />);
+    </script>
+</body>
+</html>
