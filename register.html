@@ -330,7 +330,10 @@
     <script type="text/babel">
         const { useState, useCallback, useEffect } = React;
 
-        const API_URL = 'http://localhost:3001/api';
+        //API_URL
+        const API_URL = window.location.hostname === 'localhost' 
+        ? 'http://localhost:3001' 
+        : 'mindbase-be-production.up.railway.app';
 
         function RegisterPage() {
             const [formData, setFormData] = useState({
