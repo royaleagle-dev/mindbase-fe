@@ -242,8 +242,8 @@
 
         //API_URL
         const API_URL = window.location.hostname === 'localhost' 
-        ? 'http://localhost:3001' 
-        : 'mindbase-be-production.up.railway.app';
+        ? 'http://localhost:3001/api' 
+        : 'mindbase-be-production.up.railway.app/api';
 
         function LoginPage() {
             const [formData, setFormData] = useState({ email: '', password: '' });
